@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" typr="text/css" href="estilos.css" media="all">
+    <title>Dibujar figura en canvas</title>
+</head>
+<body>
+    <div id="elementos">
+        <div>Selecciona la figura: 
+            <select id="tipoFigura" onchange="mostrarCoordenadas(this.value)">
+                <option>Rectángulo</option>
+                <option>Circulo</option>
+                <option>Triángulo</option>
+            </select>
+        </div>
+        <div id="radio" hidden>Radio circulo: <input id="radioVal" /></div>
+        <div id="coord1"><label id="label_coord1">Pos x: </label><input id="punto1"/></div>
+        <div id="coord2"><label id="label_coord2">Pos y: </label><input id="punto2"/></div>
+        <div id="coord3"><label id="label_coord3">Ancho: </label><input id="punto3"/></div>
+        <div id="coord4"><label id="label_coord4">Alto: </label><input id="punto4"/></div>
+        <div><input id="color" type="color" /></div>
+        <button onclick="crearForma()">Dibuja</button>
+    </div>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    function mostrarCoordenadas(figura){
+        document.getElementById("radio").value = "";
+        document.getElementById("coord1").value = "";
+        document.getElementById("coord2").value = "";
+        document.getElementById("coord3").value = "";
+        document.getElementById("coord4").value = "";
+        switch(figura){
+            case "Rectángulo":
+                document.getElementById("radio").setAttribute("hidden",true);
+                document.getElementById("coord1").removeAttribute("hidden");
+                document.getElementById("label_coord1").innerHTML = "Pos x: ";
+                document.getElementById("coord2").removeAttribute("hidden");
+                document.getElementById("label_coord2").innerHTML = "Pos y: ";
+                document.getElementById("coord3").removeAttribute("hidden");
+                document.getElementById("coord4").removeAttribute("hidden");
+            break;
+            case "Circulo":
+                document.getElementById("radio").removeAttribute("hidden");
+                document.getElementById("coord1").setAttribute("hidden",true);
+                document.getElementById("coord2").setAttribute("hidden",true);
+                document.getElementById("coord3").setAttribute("hidden",true);
+                document.getElementById("coord4").setAttribute("hidden",true);
+            break;
+            case "Triángulo":
+                document.getElementById("radio").setAttribute("hidden",true);
+                document.getElementById("coord1").removeAttribute("hidden");
+                document.getElementById("label_coord1").innerHTML = "Anchura: ";
+                document.getElementById("coord2").removeAttribute("hidden");
+                document.getElementById("label_coord2").innerHTML = "Altura: ";
+                document.getElementById("coord3").setAttribute("hidden",true);
+                document.getElementById("coord4").setAttribute("hidden",true);
+            break;
+        }
+    }
+    function crearForma(){
+        radio = document.getElementById("radioVal").value;
+        p1 = document.getElementById("punto1").value;
+        p2 = document.getElementById("punto2").value;
+        p3 = document.getElementById("punto3").value;
+        p4 = document.getElementById("punto4").value;
+
+        var canvas = document.getElementById('canvas');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = document.getElementById("color").value;
+            switch(document.getElementById("tipoFigura").value){
+                case "Rectángulo":
+                    ctx.fillRect(parseInt(p1),parseInt(p2),parseInt(p3),parseInt(p4));
+                break;
+                case "Circulo":
+                    ctx.beginPath();
+                    ctx.arc(canvas.width/2,canvas.height/2, parseInt(radio), 0, Math.PI*2, false);
+                    ctx.fill();
+                break;
+                case "Triángulo":
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width/2, 0);
+                    ctx.lineTo((canvas.width/2)-parseInt(p1),p2);
+                    ctx.lineTo((canvas.width/2)+parseInt(p1),p2);
+                    ctx.closePath();
+                    ctx.fill();
+                break;
+            }
+            
+        }
+    }
+
+</script>
+</html>
